@@ -1,27 +1,22 @@
-import { ADD } from "./actionTypes";
+import { ADD, DELETED, FETCHED } from "./actionTypes";
 import initialState from "./initialState";
-
-const nextBookId = (books) => {
-  const maxId = books.reduce((maxId, book)=> Math.max(book.id, maxId), 0);
-  return maxId + 1
-}
 
 const reducer = (state = initialState, action) => {
   switch (action.type){
+    case FETCHED:
+      return action.payload
+
      case ADD:
-      const {name, author, image, price, rating, isFeature} = action.payload
         return [
           ...state,
-          {
-            id: nextBookId(state),
-            name,
-            author,
-            image,
-            price,
-            rating,
-            isFeature
-          }
+          action.payload
         ]
+
+      case DELETED:
+        return state.filter((book)=> book.id !== action.payload)
+
+      default:
+        return state
   }
 }
 
