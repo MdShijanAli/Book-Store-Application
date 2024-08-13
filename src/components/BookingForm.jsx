@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import addBook from "../redux/books/thunk/addBook";
+import setEditMode from "../redux/books/thunk/setEditMode";
+import updateBook from "../redux/books/thunk/updateBook";
 
 function BookingForm() {
+  const books = useSelector((state)=> state.books.books)
+  const editMode = useSelector((state)=> state.books.edit)
   const dispatch = useDispatch()
+  console.log('editMode', editMode);
 
   const [name, setName] = useState('')
   const [author, setAuthor] = useState('')
@@ -30,6 +35,7 @@ function BookingForm() {
   const handleChangeFeatured = (e)=>{
     setFeatured(e.target.checked)
   }
+  
 
   const handleSubmit = (e) => {
      e.preventDefault()
@@ -43,16 +49,46 @@ function BookingForm() {
        featured
      }
 
-     dispatch(addBook(bookData))
+     if(editMode.editMode){
+      dispatch(updateBook(editMode.id, bookData))
+      dispatch(setEditMode(false))
+      setName('')
+      setAuthor('')
+      setThumbnail('')
+      setPrice('')
+      setRating('')
+      setFeatured(false)
+     }
+     else{
+      dispatch(addBook(bookData))
      
-     setName('')
-     setAuthor('')
-     setThumbnail('')
-     setPrice('')
-     setRating('')
-     setFeatured(false)
+      setName('')
+      setAuthor('')
+      setThumbnail('')
+      setPrice('')
+      setRating('')
+      setFeatured(false)
+     }
 
   }
+
+  useEffect(()=>{
+     if(editMode.editMode){{
+      console.log('Edit Mode Enable');
+      const book = books.find((book)=> book.id === editMode.id)
+      console.log('Book', book);
+      
+
+     setName(book.name)
+     setAuthor(book.author)
+     setThumbnail(book.thumbnail)
+     setPrice(book.price)
+     setRating(book.rating)
+     setFeatured(book.featured)
+
+      
+     }}
+  },[editMode])
 
   return (
     <div>
@@ -91,7 +127,7 @@ function BookingForm() {
             <label htmlFor="featured" className="ml-2 text-sm"> This is a featured book </label>
           </div>
 
-          <button type="submit" className="submit" id="submit">Add Book</button>
+          <button type="submit" className="submit" id="submit">{editMode.editMode ? 'Update': 'Add Book'}</button>
         </form>
       </div>
     </div>

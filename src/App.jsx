@@ -6,7 +6,7 @@ import Navbar from './components/Navbar'
 import store from './redux/store'
 
 function App() {
-
+  
   return (
     <Provider store={store}>
     <Navbar />

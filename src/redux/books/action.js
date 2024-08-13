@@ -1,4 +1,4 @@
-import { ADD, DELETED, FETCHED, SWITCHED, UPDATE } from "./actionTypes"
+import { ADD, DELETED, EDIT, FETCHED, SWITCHED, UPDATE } from "./actionTypes"
 
 export const add = (bookData) => {
   return {
@@ -14,11 +14,11 @@ export const fetched = (bookData) => {
   }
 }
 
-export const update = (id, book) => {
+export const update = (bookId, book) => {
   return {
     type: UPDATE,
     payload: {
-      id,
+      bookId,
       book
     }
   }
@@ -35,5 +35,14 @@ export const switched = (value) => {
   return {
     type: SWITCHED,
     payload: value
+  }
+}
+
+export const edit = (bookId, value) => {
+  return {
+    type: EDIT,
+    payload: {
+      bookId, value
+    }
   }
 }
